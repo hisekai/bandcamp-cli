@@ -96,3 +96,7 @@ Downloads all the albums by "some band" and makes sure the artist's folder is ca
 ```sh
 bandcamp-cli -u <username> -a "some band" -r "Some Band"
 ```
+
+## Issues
+
+It is common for the site to use captcha as an anti-bot measure. Unfortunately, I haven't found a (free) workaround for it. Not using puppeteer in headless mode helps but is not 100% guaranteed to work which is why the headless mode is now set to false.

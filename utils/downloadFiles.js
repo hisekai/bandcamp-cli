@@ -1,11 +1,14 @@
 const fs = require("fs");
 const path = require("path");
 const { on } = require("stream");
-const puppeteer = require("puppeteer");
 const request = require("request");
 const admZip = require("adm-zip");
 const cliProgress = require("cli-progress");
 const formats = require("./formats");
+const puppeteerExtra = require('puppeteer-extra');
+const Stealth = require('puppeteer-extra-plugin-stealth');
+
+puppeteerExtra.use(Stealth());
 
 const downloadFiles = async (albums, format, downloadPath, last, rename) => {
   const multibar = new cliProgress.MultiBar(
@@ -21,30 +24,22 @@ const downloadFiles = async (albums, format, downloadPath, last, rename) => {
     cliProgress.Presets.legacy
   );
   if (last) albums = albums.splice(0, last);
-  const target = `#post-checkout-info div.formats-container ul > li:nth-child(${
-    formats.indexOf(format) + 1
-  })`;
-  console.log();
+  const targetFormat = formats.filter(f => {
+    return f.flag === format
+  });
   albums.map(async (album) => {
     try {
-      const browser = await puppeteer.launch();
+      const browser = await puppeteerExtra.launch({headless: false});
       const page = await browser.newPage();
       await page.goto(album.downloadLink);
       await page.waitForTimeout(1000);
-      await page.click(".item-format");
-      await page.click(target);
-      await page.waitForSelector(
-        "div.free-download.download > div.format-container > span > a",
-        {
-          visible: true,
-        }
-      ); // make sure the link is ready beforing clicking on it
-      await page.waitForTimeout(2000);
-      // get the link
-      await page.waitForSelector(".download-title a");
-      await page.waitForTimeout(2000);
-      const link = await page.$eval(".download-title a", (el) => el.href);
-      // download and extraction
+      await page.click(".bc-select");
+      await page.select('#format-type', targetFormat[0].format);
+      await page.waitForSelector('.download-button', {
+        visible: false,
+      });
+      const link = await page.$eval(".download-format-tmp > a:nth-child(5)", (el) => el.href);
+      // // download and extraction
       const zipFile = path.join(downloadPath, `${album.title}.zip`);
       const file = fs.createWriteStream(zipFile);
       request(link)

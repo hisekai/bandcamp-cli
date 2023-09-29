@@ -1,6 +1,6 @@
 {
   "name": "bandcamp-cli",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "A CLI tool for downloading personal Bandcamp collection",
   "bin": "index.js",
   "main": "index.js",
@@ -30,7 +30,9 @@
     "meow": "^9.0.0",
     "prompts": "^2.4.2",
     "puppeteer": "^12.0.1",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
     "request": "^2.88.2",
-    "user-agents": "^1.0.872"
+    "user-agents": "^1.0.1444"
   }
 }

@@ -7,9 +7,7 @@ const displayProfile = (profile) => {
   });
 
   table.push([
-    `${cyan(profile.name ? profile.name : profile.username)} ${dim(
-      profile.location && `(${profile.location})`
-    )}`,
+    `${cyan(profile.name ? profile.name : profile.username)}`,
     `Collection: ${profile.collectionNum}`,
     `Wishlist: ${profile.wishlistNum ? profile.wishlistNum : "0"}`,
   ]);

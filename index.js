@@ -44,7 +44,8 @@ const homeDir = os.homedir();
 
     // check for flags
     if (format) {
-      if (!formats.includes(format)) {
+      let result = formats.map(f => f.flag);
+      if (!result.includes(format)) {
         console.log("The format you've specified is not available.");
         return;
       }

@@ -1,14 +1,17 @@
-const puppeteer = require("puppeteer");
-const userAgent = require("user-agents"); // for decreasing the chance of encountering captcha
 const waitTillHTMLRendered = require("./waitUntilHTMLRendered");
+const puppeteer = require('puppeteer-extra');
+const Stealth = require('puppeteer-extra-plugin-stealth');
+const userAgent = require("user-agents");
+puppeteer.use(Stealth());
 
 async function getData(username, password) {
   let collection;
   let profile;
   try {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ headless: false});
     const page = await browser.newPage();
     await page.setUserAgent(userAgent.toString());
+    await page.setViewport({ width: 1280, height: 720 });
     await page.goto("https://bandcamp.com/login", {
       waitUntil: "load",
       timeout: 0,
@@ -31,7 +34,6 @@ async function getData(username, password) {
           return;
         }
         clearInterval();
-        resolve();
       }, 10);
     });
     // make sure all of the page is scrolled to the bottom before scraping data
